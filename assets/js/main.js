@@ -43,8 +43,8 @@ if ('IntersectionObserver' in window) {
   sections.forEach((section) => sectionObserver.observe(section));
 }
 
-// Homepage avatar: both pre-rendered states use the exact same square canvas and position.
-// No extra border, orbit, dot or state-specific scaling is applied here.
+// Homepage avatar: two high-resolution, pre-aligned square images share one circular viewport.
+// There is no state-specific scaling or movement, so clicking only changes the expression.
 const avatar = document.querySelector('.avatar-button');
 const avatarImg = avatar?.querySelector('img');
 let winkTimer;
@@ -57,21 +57,21 @@ if (avatar && avatarImg) {
   avatarStyle.id = 'avatar-final-style';
   avatarStyle.textContent = `
     .avatar-button{
-      overflow:visible!important;
+      overflow:hidden!important;
       border:0!important;
-      border-radius:0!important;
+      border-radius:50%!important;
       outline:none!important;
-      background:transparent!important;
-      box-shadow:none!important;
+      background:#eee7ff!important;
+      box-shadow:0 18px 46px rgba(98,65,211,.09)!important;
       isolation:isolate;
+      -webkit-mask-image:-webkit-radial-gradient(white,black);
     }
     .avatar-button::after{display:none!important}
     .avatar-button:active{transform:none!important}
     .avatar-button:focus{outline:none!important}
     .avatar-button:focus-visible{
       outline:none!important;
-      box-shadow:0 0 0 4px rgba(111,70,255,.10)!important;
-      border-radius:50%!important;
+      box-shadow:0 0 0 4px rgba(111,70,255,.10),0 18px 46px rgba(98,65,211,.09)!important;
     }
     .avatar-button .avatar-layer{
       position:absolute!important;
@@ -81,12 +81,13 @@ if (avatar && avatarImg) {
       max-width:none!important;
       border:0!important;
       border-radius:0!important;
-      object-fit:contain!important;
-      object-position:center!important;
+      object-fit:cover!important;
+      object-position:50% 50%!important;
       transform:none!important;
       pointer-events:none!important;
-      transition:opacity .08s linear!important;
+      transition:opacity .055s linear!important;
       will-change:opacity;
+      image-rendering:auto!important;
     }
     .avatar-button .avatar-normal{z-index:1!important;opacity:1}
     .avatar-button .avatar-wink{z-index:2!important;opacity:0}
@@ -99,24 +100,27 @@ if (avatar && avatarImg) {
   avatarImg.src = normalSrc;
   avatarImg.removeAttribute('data-wink');
   avatarImg.removeAttribute('data-normal');
+  avatarImg.decoding = 'async';
 
   if (winkSrc) {
     const winkImg = document.createElement('img');
     winkImg.className = 'avatar-layer avatar-wink';
     winkImg.src = winkSrc;
     winkImg.alt = '';
+    winkImg.decoding = 'async';
     winkImg.setAttribute('aria-hidden', 'true');
     avatar.appendChild(winkImg);
 
     const preload = new Image();
     preload.src = winkSrc;
+    if (preload.decode) preload.decode().catch(() => {});
 
     avatar.addEventListener('click', () => {
       clearTimeout(winkTimer);
       avatar.classList.add('is-winking');
       winkTimer = setTimeout(() => {
         avatar.classList.remove('is-winking');
-      }, 520);
+      }, 460);
     });
   }
 }
