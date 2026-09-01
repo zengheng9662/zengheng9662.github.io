@@ -43,25 +43,90 @@ if ('IntersectionObserver' in window) {
   sections.forEach((section) => sectionObserver.observe(section));
 }
 
-// Avatar: swap the entire pre-rendered portrait for a natural wink state.
+// Avatar redesign: one clean circular viewport, with both states aligned inside the same crop.
+// The original portrait artwork contains a baked-in inner ring, so the viewport crops slightly tighter
+// and uses state-specific scaling to keep the face visually aligned while hiding that inner frame.
 const avatar = document.querySelector('.avatar-button');
 const avatarImg = avatar?.querySelector('img');
 let winkTimer;
 if (avatar && avatarImg) {
   const normalSrc = avatarImg.dataset.normal || avatarImg.src;
   const winkSrc = avatarImg.dataset.wink;
+
+  const avatarStyle = document.createElement('style');
+  avatarStyle.id = 'avatar-redesign-style';
+  avatarStyle.textContent = `
+    .avatar-button{
+      overflow:hidden!important;
+      border-radius:50%!important;
+      border:1px solid rgba(111,70,255,.24)!important;
+      outline:none!important;
+      background:#f6f2ff!important;
+      box-shadow:0 20px 54px rgba(98,65,211,.10)!important;
+      isolation:isolate;
+    }
+    .avatar-button::after{display:none!important}
+    .avatar-button:active{transform:none!important}
+    .avatar-button:focus{outline:none!important}
+    .avatar-button:focus-visible{
+      outline:none!important;
+      box-shadow:0 0 0 4px rgba(111,70,255,.11),0 20px 54px rgba(98,65,211,.10)!important;
+    }
+    .avatar-button .avatar-layer{
+      position:absolute!important;
+      inset:0!important;
+      width:100%!important;
+      height:100%!important;
+      max-width:none!important;
+      border:0!important;
+      border-radius:0!important;
+      object-fit:cover!important;
+      object-position:center!important;
+      pointer-events:none!important;
+      transition:opacity .09s linear!important;
+      will-change:opacity;
+    }
+    .avatar-button .avatar-normal{
+      z-index:1!important;
+      opacity:1;
+      transform:scale(1.22) translateY(1%)!important;
+      transform-origin:center center!important;
+    }
+    .avatar-button .avatar-wink{
+      z-index:2!important;
+      opacity:0;
+      transform:scale(1.12) translateY(0)!important;
+      transform-origin:center center!important;
+    }
+    .avatar-button.is-winking .avatar-normal{opacity:0!important}
+    .avatar-button.is-winking .avatar-wink{opacity:1!important}
+  `;
+  document.head.appendChild(avatarStyle);
+
+  avatarImg.classList.add('avatar-layer', 'avatar-normal');
+  avatarImg.removeAttribute('data-wink');
+  avatarImg.removeAttribute('data-normal');
+
   if (winkSrc) {
+    const winkImg = document.createElement('img');
+    winkImg.className = 'avatar-layer avatar-wink';
+    winkImg.src = winkSrc;
+    winkImg.alt = '';
+    winkImg.setAttribute('aria-hidden', 'true');
+    avatar.appendChild(winkImg);
+
     const preload = new Image();
     preload.src = winkSrc;
+
     avatar.addEventListener('click', () => {
       clearTimeout(winkTimer);
       avatar.classList.add('is-winking');
-      avatarImg.src = winkSrc;
       winkTimer = setTimeout(() => {
-        avatarImg.src = normalSrc;
         avatar.classList.remove('is-winking');
       }, 560);
     });
+  } else {
+    avatarImg.src = normalSrc;
   }
 }
 
