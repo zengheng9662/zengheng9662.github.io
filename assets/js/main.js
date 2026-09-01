@@ -43,26 +43,26 @@ if ('IntersectionObserver' in window) {
   sections.forEach((section) => sectionObserver.observe(section));
 }
 
-// Avatar redesign: one clean circular viewport, with both states aligned inside the same crop.
-// The original portrait artwork contains a baked-in inner ring, so the viewport crops slightly tighter
-// and uses state-specific scaling to keep the face visually aligned while hiding that inner frame.
+// Homepage avatar: both pre-rendered states use the exact same square canvas and position.
+// No extra border, orbit, dot or state-specific scaling is applied here.
 const avatar = document.querySelector('.avatar-button');
 const avatarImg = avatar?.querySelector('img');
 let winkTimer;
+
 if (avatar && avatarImg) {
   const normalSrc = avatarImg.dataset.normal || avatarImg.src;
   const winkSrc = avatarImg.dataset.wink;
 
   const avatarStyle = document.createElement('style');
-  avatarStyle.id = 'avatar-redesign-style';
+  avatarStyle.id = 'avatar-final-style';
   avatarStyle.textContent = `
     .avatar-button{
-      overflow:hidden!important;
-      border-radius:50%!important;
-      border:1px solid rgba(111,70,255,.24)!important;
+      overflow:visible!important;
+      border:0!important;
+      border-radius:0!important;
       outline:none!important;
-      background:#f6f2ff!important;
-      box-shadow:0 20px 54px rgba(98,65,211,.10)!important;
+      background:transparent!important;
+      box-shadow:none!important;
       isolation:isolate;
     }
     .avatar-button::after{display:none!important}
@@ -70,7 +70,8 @@ if (avatar && avatarImg) {
     .avatar-button:focus{outline:none!important}
     .avatar-button:focus-visible{
       outline:none!important;
-      box-shadow:0 0 0 4px rgba(111,70,255,.11),0 20px 54px rgba(98,65,211,.10)!important;
+      box-shadow:0 0 0 4px rgba(111,70,255,.10)!important;
+      border-radius:50%!important;
     }
     .avatar-button .avatar-layer{
       position:absolute!important;
@@ -80,30 +81,22 @@ if (avatar && avatarImg) {
       max-width:none!important;
       border:0!important;
       border-radius:0!important;
-      object-fit:cover!important;
+      object-fit:contain!important;
       object-position:center!important;
+      transform:none!important;
       pointer-events:none!important;
-      transition:opacity .09s linear!important;
+      transition:opacity .08s linear!important;
       will-change:opacity;
     }
-    .avatar-button .avatar-normal{
-      z-index:1!important;
-      opacity:1;
-      transform:scale(1.22) translateY(1%)!important;
-      transform-origin:center center!important;
-    }
-    .avatar-button .avatar-wink{
-      z-index:2!important;
-      opacity:0;
-      transform:scale(1.12) translateY(0)!important;
-      transform-origin:center center!important;
-    }
+    .avatar-button .avatar-normal{z-index:1!important;opacity:1}
+    .avatar-button .avatar-wink{z-index:2!important;opacity:0}
     .avatar-button.is-winking .avatar-normal{opacity:0!important}
     .avatar-button.is-winking .avatar-wink{opacity:1!important}
   `;
   document.head.appendChild(avatarStyle);
 
   avatarImg.classList.add('avatar-layer', 'avatar-normal');
+  avatarImg.src = normalSrc;
   avatarImg.removeAttribute('data-wink');
   avatarImg.removeAttribute('data-normal');
 
@@ -123,10 +116,8 @@ if (avatar && avatarImg) {
       avatar.classList.add('is-winking');
       winkTimer = setTimeout(() => {
         avatar.classList.remove('is-winking');
-      }, 560);
+      }, 520);
     });
-  } else {
-    avatarImg.src = normalSrc;
   }
 }
 
@@ -194,7 +185,6 @@ function closeLightbox() {
 }
 
 // Detail-view quality guard: only reasonably high-resolution images can open in the lightbox.
-// This prevents low-resolution source images from being enlarged into a visibly blurry detail view.
 const MIN_DETAIL_WIDTH = 1200;
 const MIN_DETAIL_HEIGHT = 800;
 
