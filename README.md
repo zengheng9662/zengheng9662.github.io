@@ -1,12 +1,42 @@
-# ZH JOKER TABLE V3.1
+# ZENG HENG Portfolio
 
-本版重点修正：
+个人作品集网站，用于展示我的城市规划、展陈与内容、项目协作相关经历与项目成果。
 
-- 不再使用带有按钮的整张 UI 背景图，所有按钮均由真实 HTML/CSS 响应式布局控制。
-- 手机与电脑端使用同一套流式布局，避免按钮错位和画面裁切。
-- 大话骰闭合/开启使用同一骰盅素材、同一透视，仅通过位移和缩放表现揭盖。
-- 1、4 红点，其余骰子黑点。
-- A–K 全套像素卡面资产继续保留。
-- 历史、小姐、K、存卡、继续游戏、本地存档等逻辑保留。
+## Live Site
 
-部署：将本目录所有文件直接替换 GitHub 仓库根目录内容，然后 Commit + Push。GitHub Pages 会自动更新。
+https://zengheng9662.github.io
+
+## Sections
+
+- 01 主页 / Home
+- 02 实习经历 / Internship
+- 03 校园经历 / Campus Experience
+- 04 校外经历 / Off-campus Experience
+- 05 联系方式 / Contact
+
+## Website Structure
+
+```text
+.
+├─ index.html
+└─ assets/
+   ├─ css/
+   ├─ js/
+   ├─ images/
+   └─ docs/
+```
+
+## Tech
+
+This is a static portfolio website built with HTML, CSS and JavaScript, and deployed with GitHub Pages.
+
+## Notes
+
+- 支持桌面端与移动端响应式浏览。
+- 项目图片、简历与作品集文件存放在 `assets` 目录中。
+- 实习经历图片支持轮播，并可跳转至对应机构官网。
+- 部分高清项目图支持点击查看，低清图片不会打开大图。
+
+## Copyright
+
+Portfolio content, images and design materials © Zeng Heng. All rights reserved.
