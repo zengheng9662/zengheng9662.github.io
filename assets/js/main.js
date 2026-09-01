@@ -50,8 +50,8 @@ const avatarImg = avatar?.querySelector('img');
 let winkTimer;
 
 if (avatar && avatarImg) {
-  const normalSrc = avatarImg.dataset.normal || avatarImg.src;
-  const winkSrc = avatarImg.dataset.wink;
+  const normalSrc = 'assets/images/v6/avatar-normal.png';
+  const winkSrc = 'assets/images/v6/avatar-wink.png';
 
   const avatarStyle = document.createElement('style');
   avatarStyle.id = 'avatar-final-style';
