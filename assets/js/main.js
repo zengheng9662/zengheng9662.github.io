@@ -138,8 +138,8 @@ if (avatar && avatarImg) {
     .avatar-eye-window{
       position:absolute;
       z-index:3;
-      width:7%;
-      height:7%;
+      width:4.5%;
+      height:4.5%;
       overflow:hidden;
       border-radius:50%;
       pointer-events:none;
@@ -147,12 +147,12 @@ if (avatar && avatarImg) {
       transition:opacity .07s linear;
       backface-visibility:hidden;
     }
-    .avatar-eye-window.eye-left{left:38.75%;top:42.65%}
-    .avatar-eye-window.eye-right{left:57.15%;top:43.20%}
+    .avatar-eye-window.eye-left{left:40.10%;top:43.90%}
+    .avatar-eye-window.eye-right{left:58.40%;top:44.55%}
     .avatar-eye-sprite{
       position:absolute!important;
-      width:1428.571%!important;
-      height:1428.571%!important;
+      width:2222.222%!important;
+      height:2222.222%!important;
       max-width:none!important;
       border:0!important;
       border-radius:0!important;
@@ -163,8 +163,8 @@ if (avatar && avatarImg) {
       will-change:transform;
       image-rendering:auto!important;
     }
-    .eye-left .avatar-eye-sprite{left:-553.57%!important;top:-609.29%!important}
-    .eye-right .avatar-eye-sprite{left:-816.43%!important;top:-617.14%!important}
+    .eye-left .avatar-eye-sprite{left:-891.11%!important;top:-975.56%!important}
+    .eye-right .avatar-eye-sprite{left:-1297.78%!important;top:-990.00%!important}
     .avatar-button.is-winking .avatar-eye-window{opacity:0!important}
     @media (hover:none),(pointer:coarse){
       .avatar-hi,.avatar-eye-window{display:none!important}
@@ -279,8 +279,8 @@ if (avatar && avatarImg) {
       const dy = event.clientY - centerY;
       const distance = Math.hypot(dx, dy) || 1;
       const strength = Math.min(distance / (rect.width * 1.15), 1);
-      const maxX = Math.min(4, rect.width * 0.011);
-      const maxY = Math.min(2.8, rect.width * 0.0075);
+      const maxX = Math.min(2.6, rect.width * 0.0072);
+      const maxY = Math.min(1.8, rect.width * 0.0050);
 
       targetX = (dx / distance) * maxX * strength;
       targetY = (dy / distance) * maxY * strength;
